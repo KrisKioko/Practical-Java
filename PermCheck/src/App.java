@@ -69,5 +69,5 @@ class Solution {
 /* The algorithm has a time complexity of O(N) since it 
     iterates through the array twice, and a 
     space complexity of O(N) due to the boolean array 
-    seen used for bookkeeping. This is an efficient
+    'seen' used for bookkeeping. This is an efficient
     solution to determine whether an array is a permutation. */
