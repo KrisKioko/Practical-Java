@@ -68,37 +68,56 @@ import java.util.Scanner;
 
 
 class Solution {
+    // This is the main method that calculates the minimum number of nails needed. It takes three arrays as 
+    // parameters: 'A' (plank start positions), 'B' (plank end positions), and 'C' (nail positions).
     public static int solution(int[] A, int[] B, int[] C) {
-        int N = A.length;
-        int M = C.length;
+        int N = A.length;    // To determine the number of planks('N')
+        int M = C.length;    // To determine the number of nails('M')
+
+        // You set the initial left and right boundaries for the binary search. The binary search will look for 
+        // the minimum number of nails needed between 'left' and 'right'.
         int left = 1;
         int right = 2 * M + 1;
+        
+        // You initialize the result variable, which will store the minimum number of nails needed. It's initially 
+        // set to -1 to indicate that the result is unknown
         int result = -1;
 
+        // This is the start of a binary search loop. It continues as long as the left boundary is less than or equal 
+        // to the right boundary.
         while (left <= right) {
-            int mid = (left + right) / 2;
-            int[] nails = new int[mid];
-            Arrays.fill(nails, -1);
-            boolean allPlanksNailed = true;
+            int mid = (left + right) / 2;    // You calculate the middle point for the binary search. This determines the number of nails to consider in this iteration.
+            int[] nails = new int[mid];     // You create an array to store the nail positions for the current iteration. It has a length of 'mid', which represents the number of nails considered.
+            Arrays.fill(nails, -1);       // You initialize the 'nails' array with -1, indicating that no nails have been placed yet.
+            boolean allPlanksNailed = true;       // You set a flag to 'true', assuming initially that all planks can be nailed with the current number of nails.
 
+            // You loop through the first 'mid' nail positions and populate the 'nails' array with nail positions from 'C'.
             for (int i = 0; i < mid && i < M; i++) {
                 nails[i] = C[i];
             }
 
+            // You sort the 'nails 'array in ascending order to prepare for efficient searching.
             Arrays.sort(nails);
 
+            // The nested 'for' loop iterates through each plank ('A[i]' and 'B[i]'), and the 'findMinNail' function is called to find the 
+            // minimum nail position for each plank.
             for (int i = 0; i < N; i++) {
                 int minNail = findMinNail(nails, A[i], B[i]);
+
+                //  This means that not all planks can be nailed with the current number of nails. In this case, 'allPlanksNailed' is set to 
+                // 'false', and the loop breaks.
                 if (minNail == -1) {
                     allPlanksNailed = false;
                     break;
                 }
             }
 
+            // If 'allPlanksNailed' remains 'true' after the loop, it means all planks can be nailed with the current number of nails ('mid' nails), 
+            // so you update 'result' and adjust the binary search boundaries accordingly.
             if (allPlanksNailed) {
                 result = mid;
                 right = mid - 1;
-            } else {
+            } else {      // If not all planks can be nailed with the current number of nails, you adjust the boundaries for the next iteration of the binary search.
                 left = mid + 1;
             }
         }
@@ -106,6 +125,7 @@ class Solution {
         return result;
     }
 
+    // The 'findMinNail' method efficiently finds the minimum nail position for a given plank within the 'nails' array using binary search.
     private static int findMinNail(int[] nails, int start, int end) {
         int left = 0;
         int right = nails.length - 1;
@@ -159,3 +179,9 @@ class Solution {
 }
 
 
+
+/* This solution uses a binary search on the number of nails to find the minimum number of nails needed to nail all the planks. In each iteration of the binary search, it checks if it's 
+    possible to nail all the planks using the first 'mid' nails. If it's possible, it updates the result and continues searching for a smaller number of nails. If it's not possible, it 
+    increases the number of nails to search for. The 'findMinNail' function efficiently finds the minimum nail that can be used for a given plank.
+   The time complexity of this solution is O((N + M) * log(M)), where 'N' is the number of planks, and 'M' is the number of nails, making it efficient for the given input constraints.
+*/
